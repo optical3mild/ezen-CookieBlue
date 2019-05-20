@@ -1,0 +1,219 @@
+.blue-login, .blue-register {
+    background-image: url('http://www.klnews.co.kr/news/photo/201901/118631_26829_537.jpg');
+    background-size: cover;
+}
+
+/* border card style */
+.border-left-past {
+	border-left:.25rem solid #ff9f40!important
+}
+.text-past {
+	color:#ff9f40
+}
+/* ./end of border color style */
+
+
+/* 'input type=file' custom style */
+.filebox label {
+	display: inline-block;
+	padding: .25rem .5rem;
+	color: #fff;
+	font-size: .875rem;
+	line-height: 1.5;
+	vertical-align: middle;
+	background-color: #4e73df;
+	cursor: pointer;
+	border: 1px solid #4e73df;
+	border-radius: .25em;
+	-webkit-transition: background-color 0.2s;
+	transition: background-color 0.2s;
+	margin: 0 0 0 0;
+}
+
+.filebox label:hover {
+	background-color: #2e59d9;
+}
+
+.filebox label:active {
+	background-color: #367c36;
+}
+
+.filebox input[type="file"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+.displayFileName {
+	border: 1px solid #d1d3e2;
+	border-radius: 0.25rem;
+	padding: 4px 8px;
+	background-color: #f8f9fc;
+	text-align: left;
+	font-family: Nunito;
+	font-size: 0.875rem;
+	font-weight: 500;
+	line-height: 1.5;
+}
+/* end of 'input type=file' custom style */
+
+/* datepicker, monthpicker input style*/ 
+.picker-input {
+    height: calc(1.5em + .5rem + 2px);
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+    border: 1px solid #d1d3e2;
+  }
+
+/* datepicker button style */
+.ui-datepicker-prev span {
+    background-image: url(img/arrow-alt-circle-left-solid.svg) !important;
+        background-position: 0px 0px !important;
+}
+
+.ui-datepicker-next span {
+    background-image: url(img/arrow-alt-circle-right-solid.svg) !important;
+        background-position: 0px 0px !important;
+}
+/* ./end of datepicker button style */
+
+
+/* category ".hover-item > .hover-fadeout, .hover-fadein" setting */
+.fade-item {
+  height: 16rem;
+}
+
+.hover-fadeout {
+  height: 16rem;
+  background-position: center center;
+  background-size: cover;
+  border-radius: .35rem
+}
+
+.fade-item .hover-fadeout {
+  position: relative;
+  transition-property: opacity;
+  transition-duration: 0.75s;
+  opacity: 1;
+}
+
+.fade-item:hover .hover-fadeout {
+  transition-property: opacity;
+  transition-duration: 0.75s;
+  opacity: 0.25;
+}
+
+.fade-item .hover-fadein {
+  transition-property: opacity;
+  transition-duration: 0.75s;
+  opacity: 0;
+  color: white;
+  
+  align-items: center;
+  background-color: rgba(90,92,105,.5);
+  height: 16rem;
+  border-radius: .35rem;
+  z-index:-1;
+  position: relative; left:0px; top:-16rem; flex:1; border:none;
+  
+  justify-content: center;
+  text-align: center;
+  font-weight: 200;
+}
+
+.fade-item:hover .hover-fadein {
+  transition-property: opacity;
+  transition-duration: 0.75s;
+  opacity: 1;
+  color: white;
+  
+  align-items: center;
+  background-color: rgba(90,92,105,.5);
+  height: 16rem;
+  border-radius: .35rem;
+  z-index:1;
+  position: relative; left:0px; top:-16rem; flex:1; border:none;
+  
+  justify-content: center;
+  text-align: center;
+  font-weight: 200;
+}
+
+.hover-fadein button {
+  background-color: transparent;
+  color: #ffffff !important;
+   
+  border:1px solid;
+  border-radius: 0.5em;
+  padding:0.5rem 1rem;
+}
+/* ./end of category ".hover-item > .hover-fadeout, .hover-fadein" setting */
+
+
+/* categoryList item cell */
+.p-box {
+  min-height:13rem;
+  margin-bottom:1.5rem;
+}
+
+.p-box-layout { /* class "card + shadow" */
+  width: 100%;
+  padding: unset;
+  box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important;
+  position: relative;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid #e3e6f0;
+  border-radius: .35rem;
+}
+
+.p-box-layout-img {
+  width:100%;
+  height:10rem;
+  background-position: center center;
+  background-size: cover;
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.p-box-layout-caption {
+  margin:0.2rem 0.5rem;
+}
+
+.p-box-layout-caption-head {
+  padding: .25rem 0.75rem;
+  background-color: white;
+  min-height: max-content;
+  margin-bottom: 0;
+  border-bottom: 1px solid #e3e6f0;
+}
+
+.p-box-layout-caption-head h6{
+  color: #4e73df!important;
+  font-weight: 700!important;
+  margin: 0!important;
+}
+
+.p-box-layout-caption-script {
+  padding: .25rem 0.75rem;
+  -webkit-box-flex: 1;
+  flex: 1 1 auto;
+  font-size: 80%;
+  font-weight: 400;
+}
+
+.p-box-layout-caption-script p{
+  margin: unset;
+}
+/* ./end of categoryList item cell */
