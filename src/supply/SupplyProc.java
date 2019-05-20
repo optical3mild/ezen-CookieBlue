@@ -39,10 +39,23 @@ public class SupplyProc extends HttpServlet {
 		String message = new String();
 		RequestDispatcher rd;
 		
+		String cookieId = new String();
+		
+		Cookie[] cookies = request.getCookies();
+		for (Cookie cookie: cookies) {
+			if (cookie.getName().equals("supply"))
+				cookieId = cookie.getValue();
+			LOG.debug("{}, {}", cookie.getName(), cookie.getValue());
+		}
+		
+		String userId = (String)session.getAttribute(cookieId+"userId");
+		String userName = (String)session.getAttribute(cookieId+"userName");
+		int userType = (Integer)session.getAttribute(cookieId+"userType");
+
+		
 		CustomerFunction cf = new CustomerFunction();
 		String curMonth = cf.curMonth();
 		String supplierCode = new String();
-		String userId = new String();
 		int monthTotalPrice = 0;
 		int count=0;
 
@@ -55,7 +68,6 @@ public class SupplyProc extends HttpServlet {
 		case "complete":
 			// complete를 하면 대기중(sState = 0)인 발주를 배송중(sState = 1)으로 만듬
 			LOG.trace("sProc.complete진입");
-			userId = (String)session.getAttribute("userId");
 			supplierCode = CustomerFunction.SupplierCode(userId);
 			sDtoLists = sDao.selectBeforeState(supplierCode);
 			for(SupplyDTO supply : sDtoLists) {
@@ -82,7 +94,6 @@ public class SupplyProc extends HttpServlet {
 		case "supplyBeforeList":
 			LOG.trace("sProc.supplyBeforeList진입");
 			// 상태가 0,1 인 목록
-			userId = (String)session.getAttribute("userId");
 			supplierCode = CustomerFunction.SupplierCode(userId);
 			sDtoLists = sDao.selectBeforeAll(supplierCode);
 			int supplyTotalPrice =0;
@@ -97,8 +108,6 @@ public class SupplyProc extends HttpServlet {
 			
 		case "supplyAfterList":
 			// 상태가 2인 목록
-			LOG.trace("sProc.supplyAfterList진입");
-			userId = (String)session.getAttribute("userId");
 			LOG.trace("sProc.intoMain userID : " + userId);
 			supplierCode = CustomerFunction.SupplierCode(userId);
 			LOG.trace(supplierCode);
@@ -126,7 +135,6 @@ public class SupplyProc extends HttpServlet {
 				rd.forward(request, response);
 				break;
 			}
-			userId = (String)session.getAttribute("userId");
 			LOG.trace("sProc.intoMain userID : " + userId);
 			supplierCode = CustomerFunction.SupplierCode(userId);
 			LOG.trace(supplierCode);
@@ -148,7 +156,6 @@ public class SupplyProc extends HttpServlet {
 		case "intoMain":
 			LOG.trace("sProc.intoMain진입");
 			//	변수
-			userId = (String)session.getAttribute("userId");
 			LOG.trace("sProc.intoMain변수 userID : " + userId);
 			supplierCode = CustomerFunction.SupplierCode(userId);
 			LOG.trace("SupplyProc.intoMain supplierCode : "+supplierCode);

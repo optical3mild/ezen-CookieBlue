@@ -136,6 +136,13 @@ public class CustomerFunction {
 //------------------------------- 01. 현재 시간 관련 함수 ------------------------------------------------
 	
 	//현재 시간을 구하는 함수
+		public String cookieTime() {
+			LocalDateTime curTime = LocalDateTime.now();
+	    	DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");	
+	    	return curTime.format(dateTimeFormatter);
+		}
+	
+	//현재 시간을 구하는 함수
 	public String curTime() {
 		LocalDateTime curTime = LocalDateTime.now();
     	DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");	

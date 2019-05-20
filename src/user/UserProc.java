@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import function.CustomerFunction;
 
 
 
@@ -42,10 +45,12 @@ public class UserProc extends HttpServlet {
 		//공통 설정 
 		request.setCharacterEncoding("UTF-8");
 		RequestDispatcher rd;
+		CustomerFunction cf = new CustomerFunction();
 		HttpSession session = request.getSession();
 		String action = request.getParameter("action");
 		String message = new String();
 		String url = new String();
+		Cookie[] cookies = request.getCookies();
 		
 		//변수 목록
 		String id = new String();
@@ -58,6 +63,7 @@ public class UserProc extends HttpServlet {
 		int userType = 0;
 		int result = 0; //match 검사용
 		String errorMessage = null;
+		String cookieId = new String();
 		
 		
 		//user 메소드 관련 변수 설정
@@ -65,34 +71,38 @@ public class UserProc extends HttpServlet {
 		UserDTO uDto = new UserDTO();
 		
 		switch(action){
-		case "intoMain": //로그인 유형에 따른 메인페이지 이동
-			userType  = (Integer)session.getAttribute("userType");
-			LOG.trace("사용자 유형 :" + userType);
-			
-			switch(userType) {
-			case 1:
-				LOG.trace("운송사 입장");
-				rd = request.getRequestDispatcher("TransProc?action=intoMain");
-				rd.forward(request, response);
+		case "cookieCheck":
+			url = "";
+			for (Cookie cookie: cookies) {
+				LOG.trace("쿠키 확인 : {}, {}", cookie.getName(), cookie.getValue());
+				switch(cookie.getName()) {
+				case "admin":
+					url = "AdminProc?action=intoMain";
+					break;
+				case "trans":
+					url = "TransProc?action=intoMain";
+					break;
+				case "mall":
+					url = "MallProc?action=intoMain";
+					break;
+				case "supply":
+					url = "SupplyProc?action=intoMain";
+					break;	
+				}
+				if(!url.equals("")) { // 쿠키가 있으면 해당 페이지로
+					LOG.trace("쿠키 있음");
+					rd = request.getRequestDispatcher(url);
+					rd.forward(request, response);
 				break;
-			case 2:
-				LOG.trace("쇼핑몰 입장");
-				name = (String)session.getAttribute("userId");
-				rd = request.getRequestDispatcher("MallProc?action=intoMain");
+				}
+			}
+			LOG.trace("쿠키 없음");
+			if(url.equals("")) {
+				rd = request.getRequestDispatcher("login.jsp"); //쿠키가 없으면 login 페이지로 
 				rd.forward(request, response);
-				break;
-			case 3:
-				LOG.trace("공급사 입장");
-				name = (String)session.getAttribute("userId");
-				rd = request.getRequestDispatcher("SupplyProc?action=intoMain");
-				rd.forward(request, response);
-				break;
-			case 0:
-				rd = request.getRequestDispatcher("AdminProc?action=intoMain");
-				rd.forward(request, response);
-				break;
 			}
 			break;
+			
 		case "login" : //로그인을 위한 처리 부분
 			
 			id = request.getParameter("id");	
@@ -114,11 +124,44 @@ public class UserProc extends HttpServlet {
 			
 			if(result == UserDAO.ID_PASSWORD_MATCH){
 				uDto = uDao.searchById(id);
-				session.setAttribute("userId", id);
-				session.setAttribute("userName", uDto.getName());
-				session.setAttribute("userType", uDto.getuserType());
+				cookieId = id + cf.cookieTime();
+				LOG.trace("UserProc 로그인 타입 : " + uDto.getuserType());
+				switch(uDto.getuserType()) {
+				case 0:
+					Cookie adminCookie = new Cookie("admin", cookieId);
+					adminCookie.setPath("/CookieBlue");
+					adminCookie.setMaxAge(60*60*24*7);
+					response.addCookie(adminCookie);
+					LOG.trace("관리자 입장");
+					break;
+				case 1:
+					Cookie transCookie = new Cookie("trans", cookieId);
+					transCookie.setPath("/");
+					transCookie.setMaxAge(60*60*24*7);
+					response.addCookie(transCookie);
+					LOG.trace("운송사 입장");
+					break;
+				case 2:
+					Cookie mallCookie = new Cookie("mall", cookieId);
+					mallCookie.setPath("/");
+					mallCookie.setMaxAge(60*60*24*7);
+					response.addCookie(mallCookie);
+					LOG.trace("쇼핑몰 입장");
+					break;
+				case 3:
+					Cookie supplyCookie = new Cookie("supply", cookieId);
+					supplyCookie.setPath("/");
+					supplyCookie.setMaxAge(60*60*24*7);
+					response.addCookie(supplyCookie);
+					LOG.trace("공급사 입장");
+					break;
+				}
+				session.setAttribute(cookieId + "userId", id);
+				session.setAttribute(cookieId + "userName", uDto.getName());
+				session.setAttribute(cookieId + "userType", uDto.getuserType());
 				LOG.trace("userId : " + id + ", userName : " + uDto.getName() + ", userType : " + uDto.getuserType());
-				rd = request.getRequestDispatcher("UserProc?action=intoMain");
+				
+				rd = request.getRequestDispatcher("../loginPath.jsp");
 				rd.forward(request, response);
 			} else{
 				request.setAttribute("message", errorMessage);
@@ -129,10 +172,36 @@ public class UserProc extends HttpServlet {
 			uDao.close();
 			break;
 		case "logout":
-			session.removeAttribute("userId");
-			session.removeAttribute("userName");
-			session.removeAttribute("userType");
-			
+			url = null;
+			for (Cookie cookie: cookies) {
+				LOG.trace("쿠키 확인 : {}, {}", cookie.getName(), cookie.getValue());
+				switch(cookie.getName()) {
+				case "admin":
+					cookieId = cookie.getValue();
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+					break;
+				case "trans":
+					cookieId = cookie.getValue();
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+					break;
+				case "mall":
+					cookieId = cookie.getValue();
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+					break;
+				case "supply":
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+					cookieId = cookie.getValue();
+					break;	
+				}
+			}
+
+			session.removeAttribute(cookieId+"userId");
+			session.removeAttribute(cookieId+"userName");
+			session.removeAttribute(cookieId+"userType");
 			response.sendRedirect("login.jsp");
 			break;
 		case"register":

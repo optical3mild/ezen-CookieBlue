@@ -7,9 +7,11 @@ import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +41,23 @@ public class AdminProc extends HttpServlet {
 		//공통 설정 
 		request.setCharacterEncoding("UTF-8");
 		RequestDispatcher rd;
+		HttpSession session = request.getSession();
 		String action = request.getParameter("action");
 		String message = new String();
 		CustomerFunction cf = new CustomerFunction();
+		
+		String cookieId = new String();
+		
+		Cookie[] cookies = request.getCookies();
+		for (Cookie cookie: cookies) {
+			LOG.debug("adminProc : {}, {}", cookie.getName(), cookie.getValue());
+			if (cookie.getName().equals("admin"))
+				cookieId = cookie.getValue();
+		}
+		
+		String userId = (String)session.getAttribute(cookieId+"userId");
+		String userName = (String)session.getAttribute(cookieId+"userName");
+		int userType = (Integer)session.getAttribute(cookieId+"userType");
 		
 		
 		AdminDAO aDao = new AdminDAO();
