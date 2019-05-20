@@ -31,8 +31,7 @@
         </form>
       </div>
     </li>
-
-
+ 	<c:set value ='<%=session.getAttribute(request.getAttribute("cookieId")+"userType")%>' var="userType"/>
     <!-- Nav Item - User Information : 로그인 -->
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -51,7 +50,7 @@
         <c:if test="${userType==null}">
         	<i class="fas fa-child" style="font-size: 1.5rem;"></i>&nbsp;&nbsp;
         </c:if>
-        <span class="mr-2 d-none d-lg-inline text-gray-600 boldfont">${userName}님 환영합니다.</span>
+        <span class="mr-2 d-none d-lg-inline text-gray-600 boldfont"><%=session.getAttribute(request.getAttribute("cookieId")+"userName")%>님 환영합니다.</span>
       </a>
       <!-- Dropdown - User Information -->
       <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

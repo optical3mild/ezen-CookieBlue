@@ -2,6 +2,7 @@ package user;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
@@ -65,7 +66,6 @@ public class UserProc extends HttpServlet {
 		String errorMessage = null;
 		String cookieId = new String();
 		
-		
 		//user 메소드 관련 변수 설정
 		UserDAO uDao = new UserDAO();
 		UserDTO uDto = new UserDTO();
@@ -77,20 +77,36 @@ public class UserProc extends HttpServlet {
 				LOG.trace("쿠키 확인 : {}, {}", cookie.getName(), cookie.getValue());
 				switch(cookie.getName()) {
 				case "admin":
+					cookieId = cookie.getName();
+					uDto = uDao.searchById("admin");
 					url = "AdminProc?action=intoMain";
 					break;
 				case "trans":
+					cookieId = cookie.getName();
+					StringTokenizer transId = new StringTokenizer(cookie.getValue(),"+");
+					uDto = uDao.searchById(transId.nextToken());
 					url = "TransProc?action=intoMain";
 					break;
 				case "mall":
+					cookieId = cookie.getName();
+					StringTokenizer mallId = new StringTokenizer(cookie.getValue(),"+");
+					uDto = uDao.searchById(mallId.nextToken());
 					url = "MallProc?action=intoMain";
 					break;
 				case "supply":
+					cookieId = cookie.getName();
+					StringTokenizer supplyId = new StringTokenizer(cookie.getValue(),"+");
+					uDto = uDao.searchById(supplyId.nextToken());
 					url = "SupplyProc?action=intoMain";
 					break;	
 				}
 				if(!url.equals("")) { // 쿠키가 있으면 해당 페이지로
 					LOG.trace("쿠키 있음");
+					LOG.trace("userId : " + cookieId + ", userName : " + uDto.getName() + ", userType : " + uDto.getuserType());
+					request.setAttribute("cookieId", cookieId);
+					session.setAttribute(cookieId + "userId", cookieId);
+					session.setAttribute(cookieId + "userName", uDto.getName());
+					session.setAttribute(cookieId + "userType", uDto.getuserType());
 					rd = request.getRequestDispatcher(url);
 					rd.forward(request, response);
 				break;
@@ -124,7 +140,7 @@ public class UserProc extends HttpServlet {
 			
 			if(result == UserDAO.ID_PASSWORD_MATCH){
 				uDto = uDao.searchById(id);
-				cookieId = id + cf.cookieTime();
+				cookieId = id +"+"+ cf.cookieTime();
 				LOG.trace("UserProc 로그인 타입 : " + uDto.getuserType());
 				switch(uDto.getuserType()) {
 				case 0:
@@ -136,32 +152,33 @@ public class UserProc extends HttpServlet {
 					break;
 				case 1:
 					Cookie transCookie = new Cookie("trans", cookieId);
-					transCookie.setPath("/");
+					transCookie.setPath("/CookieBlue");
 					transCookie.setMaxAge(60*60*24*7);
 					response.addCookie(transCookie);
 					LOG.trace("운송사 입장");
 					break;
 				case 2:
 					Cookie mallCookie = new Cookie("mall", cookieId);
-					mallCookie.setPath("/");
+					mallCookie.setPath("/CookieBlue");
 					mallCookie.setMaxAge(60*60*24*7);
 					response.addCookie(mallCookie);
 					LOG.trace("쇼핑몰 입장");
 					break;
 				case 3:
 					Cookie supplyCookie = new Cookie("supply", cookieId);
-					supplyCookie.setPath("/");
+					supplyCookie.setPath("/CookieBlue");
 					supplyCookie.setMaxAge(60*60*24*7);
 					response.addCookie(supplyCookie);
 					LOG.trace("공급사 입장");
 					break;
 				}
+				request.setAttribute("cookieId", cookieId);
 				session.setAttribute(cookieId + "userId", id);
 				session.setAttribute(cookieId + "userName", uDto.getName());
 				session.setAttribute(cookieId + "userType", uDto.getuserType());
 				LOG.trace("userId : " + id + ", userName : " + uDto.getName() + ", userType : " + uDto.getuserType());
 				
-				rd = request.getRequestDispatcher("../loginPath.jsp");
+				rd = request.getRequestDispatcher("../index.jsp");
 				rd.forward(request, response);
 			} else{
 				request.setAttribute("message", errorMessage);
@@ -175,30 +192,16 @@ public class UserProc extends HttpServlet {
 			url = null;
 			for (Cookie cookie: cookies) {
 				LOG.trace("쿠키 확인 : {}, {}", cookie.getName(), cookie.getValue());
-				switch(cookie.getName()) {
-				case "admin":
-					cookieId = cookie.getValue();
-					cookie.setMaxAge(0);
-					response.addCookie(cookie);
-					break;
-				case "trans":
-					cookieId = cookie.getValue();
-					cookie.setMaxAge(0);
-					response.addCookie(cookie);
-					break;
-				case "mall":
-					cookieId = cookie.getValue();
-					cookie.setMaxAge(0);
-					response.addCookie(cookie);
-					break;
-				case "supply":
+				if(cookie.getName().equals("admin") || cookie.getName().equals("trans") 
+				|| cookie.getName().equals("mall") ||cookie.getName().equals("supply")) {
+					LOG.trace("쿠키 삭제");
+					cookie.setPath("/CookieBlue");
 					cookie.setMaxAge(0);
 					response.addCookie(cookie);
 					cookieId = cookie.getValue();
 					break;	
 				}
 			}
-
 			session.removeAttribute(cookieId+"userId");
 			session.removeAttribute(cookieId+"userName");
 			session.removeAttribute(cookieId+"userType");

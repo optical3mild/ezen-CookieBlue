@@ -47,17 +47,33 @@ public class AdminProc extends HttpServlet {
 		CustomerFunction cf = new CustomerFunction();
 		
 		String cookieId = new String();
+		boolean cookieOut = true;
+		
+		String userId = new String();
+		String userName = new String();
+		int userType = 0;
 		
 		Cookie[] cookies = request.getCookies();
 		for (Cookie cookie: cookies) {
 			LOG.debug("adminProc : {}, {}", cookie.getName(), cookie.getValue());
-			if (cookie.getName().equals("admin"))
+			if (cookie.getName().equals("admin")) {
 				cookieId = cookie.getValue();
+				cookieOut = false;
+			}
 		}
+		LOG.trace("cookieId : " + cookieId);
 		
-		String userId = (String)session.getAttribute(cookieId+"userId");
-		String userName = (String)session.getAttribute(cookieId+"userName");
-		int userType = (Integer)session.getAttribute(cookieId+"userType");
+		if(cookieOut) {
+			LOG.trace("쿠키 삭제되서 로그인 페이지로 이동");
+			action ="";
+			response.sendRedirect("../index.jsp");
+		} else {
+			LOG.trace("cookieId : " + cookieId);
+			request.setAttribute("cookieId", cookieId);
+			userId = (String)session.getAttribute(cookieId+"userId");
+			userName = (String)session.getAttribute(cookieId+"userName");
+			userType = (Integer)session.getAttribute(cookieId+"userType");
+		}
 		
 		
 		AdminDAO aDao = new AdminDAO();
