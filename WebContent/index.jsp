@@ -8,8 +8,28 @@
 </head>
 <body>
 	<script>
-		document.location.href = 'view/UserProc?action=cookieCheck';
+		var userType = <%=session.getAttribute(request.getAttribute("cookieId")+"userType")%>;
+		switch (userType) {
+		case 0:
+			document.location.href ="AdminProc?action=intoMain";
+			break;
+			
+		case 1:
+			document.location.href ="TransProc?action=intoMain";
+			break;
+			
+		case 2:
+			document.location.href ="MallProc?action=intoMain";
+			break;
+		
+		case 3:
+			document.location.href ="SupplyProc?action=intoMain";
+			break;
+		
+		case null:
+			document.location.href = 'view/UserProc?action=cookieCheck';
+			break;
+		}		
 	</script>
-
 </body>
 </html>

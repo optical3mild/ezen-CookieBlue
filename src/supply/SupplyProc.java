@@ -40,19 +40,31 @@ public class SupplyProc extends HttpServlet {
 		RequestDispatcher rd;
 		
 		String cookieId = new String();
+		boolean cookieOut = true;
+		
+		String userId = new String();
+		String userName = new String();
+		int userType = 0;
 		
 		Cookie[] cookies = request.getCookies();
 		for (Cookie cookie: cookies) {
-			if (cookie.getName().equals("supply"))
+			if (cookie.getName().equals("supply")) {
 				cookieId = cookie.getValue();
+				cookieOut = false;
+			}
 			LOG.debug("{}, {}", cookie.getName(), cookie.getValue());
 		}
-		
-		String userId = (String)session.getAttribute(cookieId+"userId");
-		String userName = (String)session.getAttribute(cookieId+"userName");
-		int userType = (Integer)session.getAttribute(cookieId+"userType");
-
-		
+		if(cookieOut) {
+			LOG.trace("쿠키 삭제되서 로그인 페이지로 이동");
+			action ="";
+			response.sendRedirect("../index.jsp");
+		} else {
+			LOG.trace("cookieId : " + cookieId);
+			request.setAttribute("cookieId", cookieId);
+			userId = (String)session.getAttribute(cookieId+"userId");
+			userName = (String)session.getAttribute(cookieId+"userName");
+			userType = (Integer)session.getAttribute(cookieId+"userType");
+		}
 		CustomerFunction cf = new CustomerFunction();
 		String curMonth = cf.curMonth();
 		String supplierCode = new String();
