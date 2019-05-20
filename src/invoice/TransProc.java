@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +45,19 @@ public class TransProc extends HttpServlet {
 			String message = new String();
 			CustomerFunction cf = new CustomerFunction();
 			
+			String cookieId = new String();
+			
+			Cookie[] cookies = request.getCookies();
+			for (Cookie cookie: cookies) {
+				if (cookie.getName().equals("trans"))
+					cookieId = cookie.getValue();
+				LOG.debug("{}, {}", cookie.getName(), cookie.getValue());
+			}
+			
+			String userId = (String)session.getAttribute(cookieId+"userId");
+			String userName = (String)session.getAttribute(cookieId+"userName");
+			int userType = (Integer)session.getAttribute(cookieId+"userType");
+			
 			//DTO,DAO 관련 변수
 			InvoiceDAO iDao = new InvoiceDAO();
 			OrderDAO oDao = new OrderDAO();
@@ -52,10 +66,6 @@ public class TransProc extends HttpServlet {
 	    	List<OrderDTO> oDtoLists = new ArrayList<OrderDTO>();
 	    	SupplyDAO sDao = new SupplyDAO();
 	    	
-	    	//session 변수
-	    	String userId = (String)session.getAttribute("userId");
-	    	LOG.trace("[쇼핑몰 Proc] 사용자 ID : " + userId);
-			
 	    	//일반 변수
 	    	String iCode = new String(); //송장번호를 받는 변수
 	    	String date = new String();
