@@ -59,6 +59,9 @@
           <div class="card shadow mb-4">
             <div class="card-header py-3 d-sm-flex align-items-center justify-content-between">
               <h6 class="m-0 font-weight-bold text-primary d-sm-inline-block" style="line-height:2">${requestScope.selectMonth}</h6>
+              <button class="btn btn-primary btn-sm shadow-sm" role="button" id="excuteWriteCSV">
+                <i class="fas fa-download"></i>&nbsp;&nbsp;CSV파일저장
+              </button>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -133,8 +136,12 @@
   <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-  <!-- Page level custom scripts -->
-  <script src="../js/demo/datatables-demo.js"></script>
+  <!-- dataTable Export Lib -->
+  <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+  
+  <!-- Page level custom script for dataTable -->
+  <script src="../js/bluecompany.js"></script>
  
   <!-- 날짜검색기능 -->
   <script src="../js/jquery-ui.min.js"></script>

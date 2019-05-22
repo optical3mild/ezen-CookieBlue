@@ -24,6 +24,8 @@
 
   <!-- Custom styles for this page -->
   <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+  
+  <link href="../css/bluecompany.css" rel="stylesheet">
 </head>
 <body id="page-top">
   <!-- Page Wrapper -->
@@ -43,7 +45,8 @@
           </div>
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
-            <div class="card-header py-3">
+            <div class="card-header py-3 d-sm-flex align-items-center justify-content-between">
+              <div class="d-inline-block">
               <table>
                 <tr>
                   <c:set var="invoice" value="${requestScope.invoice}"/>
@@ -54,6 +57,12 @@
                   <td style="text-align: center;">&nbsp;&nbsp;날짜 : ${invoice.iDate}&nbsp;&nbsp;</td>
                 </tr>
               </table>
+              </div>
+              <div class="d-inline-block">
+                <button class="btn btn-primary btn-sm shadow-sm" role="button" id="excuteWriteCSV">
+                  <i class="fas fa-download"></i>&nbsp;&nbsp;CSV파일저장
+                </button>
+              </div>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -124,8 +133,11 @@
   <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-  <!-- Page level custom scripts -->
-  <script src="../js/demo/datatables-demo.js"></script>
+   <!-- dataTable Export Lib -->
+  <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+  
+  <script src="../js/bluecompany.js"></script>
 </body>
 </html>
 

@@ -24,6 +24,7 @@
   <!-- Custom styles for this page -->
   <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
   
+  <link href="../css/bluecompany.css" rel="stylesheet">
 </head>
 <body id="page-top">
   <!-- Page Wrapper -->
@@ -50,6 +51,9 @@
               <div class="dropdown no-arrow">
                 <button class="dropdown-toggle btn btn-primary btn-sm shadow-sm" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fas fa-list-ul"></i>&nbsp;&nbsp;제품종류
+                </button>
+                <button class="btn btn-primary btn-sm shadow-sm" role="button" id="excuteWriteCSV">
+                  <i class="fas fa-download"></i>&nbsp;&nbsp;CSV파일저장
                 </button>
                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                   <a class="dropdown-item" href="AdminProc?action=categoryProductList&cName=A">육류</a>
@@ -95,7 +99,7 @@
              </div>
            </div>
          </div>
-          <!-- 위까지 그래프  -->
+          
         </div>
         <!-- /.container-fluid -->
       </div>
@@ -120,9 +124,12 @@
   <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
   <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-  <!-- Page level custom scripts -->
-  <script src="../js/demo/datatables-demo.js"></script>
-	
+  <!-- dataTable Export Lib -->
+  <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+  
+  <!-- Page level custom script for dataTable -->
+  <script src="../js/bluecompany.js"></script>
 </body>
 </html>
 <%@ include file="../common/_messageModal.jspf" %>
